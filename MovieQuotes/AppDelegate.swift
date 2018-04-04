@@ -18,7 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         //TODO: pass the managed object context into the view controller once we do CoreData
-       // controller.managedObjectContext = self.persistentContainer.viewContext
+        
+       // controller.context = self.persistentContainer.viewContext
         return true
     }
 
