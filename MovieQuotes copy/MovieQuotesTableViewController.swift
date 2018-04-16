@@ -10,8 +10,6 @@ import UIKit
 
 class MovieQuotesTableViewController: UITableViewController {
     
-    var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
     let movieQuotesCellIdentifier = "MovieQuotesCell"
     let noMovieQuoteCellIdentifier = "NoMovieQuoteCell"
     let showDetailSequeIdentifier = "ShowDetailSeque"
@@ -26,12 +24,13 @@ class MovieQuotesTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         self.navigationItem.leftBarButtonItem = self.editButtonItem
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showAddDialog))
+        movieQuotes.append(MovieQuote(quote: "I'll be back!", movie: "Terminator"))
+        movieQuotes.append(MovieQuote(quote: "I have a big head and little arms...I don't know how well this plan was thought through....", movie: "Meet the Robinsons"))
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.updateMovieQuoteArray()
         tableView.reloadData()
     }
     
@@ -54,55 +53,27 @@ class MovieQuotesTableViewController: UITableViewController {
             print(quoteTextField.text!)
             print(movieTextField.text!)
             
-//            let movieQuote = MovieQuote(quote: quoteTextField.text!, movie: movieTextField.text!)
-//            self.movieQuotes.insert(movieQuote, at: 0)
+            let movieQuote = MovieQuote(quote: quoteTextField.text!, movie: movieTextField.text!)
+            self.movieQuotes.insert(movieQuote, at: 0)
             
-            //TODO: come back here once we have access to the context 
-            let newMovieQuote = MovieQuote(context: self.context)
-            newMovieQuote.quote = quoteTextField.text!
-            newMovieQuote.movie = movieTextField.text!
-            newMovieQuote.created = Date()
-            self.save()
-            self.updateMovieQuoteArray()
-//
             //we want animations!
-            self.tableView.reloadData()
             
-//            if (self.movieQuotes.count == 1) {
-//                self.tableView.reloadData()
-//
-//            } else {
-//                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.top)
-//                //no animations here
-//                // self.tableView.reloadData()
-//            }
+            if (self.movieQuotes.count == 1) {
+                self.tableView.reloadData()
+                
+            } else {
+                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.top)
+                //no animations here
+                // self.tableView.reloadData()
+            }
         
         }
         
         alertController.addAction(cancelAction)
         alertController.addAction(createQuoteAction)
         
+        
         present(alertController, animated: true, completion: nil)
-        
-    }
-    
-    func updateMovieQuoteArray() {
-        //get data from out of core data
-        //make a fetch request
-        //execute the request in a try/catch block
-        
-        let request: NSFetchRequest<MovieQuote> = MovieQuote.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "created", ascending:false)]
-        
-        do {
-            movieQuotes = try context.fetch(request)
-        } catch {
-            fatalError("Unresolved Core Data error \(error)")
-        }
-    }
-    
-    func save() {
-        (UIApplication.shared.delegate as! AppDelegate).saveContext()
         
     }
     
@@ -163,11 +134,7 @@ class MovieQuotesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-          //  movieQuotes.remove(at: indexPath.row)
-            context.delete(movieQuotes[indexPath.row])
-            updateMovieQuoteArray()
-            self.save()
-            
+            movieQuotes.remove(at: indexPath.row)
             if (movieQuotes.count == 0){
                 tableView.reloadData()
                 self.setEditing(false, animated: true)

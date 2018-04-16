@@ -42,7 +42,7 @@ class MovieQuoteDetailViewController: UIViewController {
         
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler:nil)
         
-        let createQuoteAction = UIAlertAction(title: "Save", style: UIAlertActionStyle.default) { (action) in
+        let createQuoteAction = UIAlertAction(title: "Create Edit", style: UIAlertActionStyle.default) { (action) in
             let quoteTextField = alertController.textFields![0]
             let movieTextField = alertController.textFields![1]
             print(quoteTextField.text!)
@@ -50,9 +50,7 @@ class MovieQuoteDetailViewController: UIViewController {
             
             self.movieQuote?.quote = quoteTextField.text!
             self.movieQuote?.movie = movieTextField.text!
-            self.save()
             self.updateView()
-            
             }
         
         alertController.addAction(cancelAction)
@@ -60,11 +58,7 @@ class MovieQuoteDetailViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
             
         }
-    
-    func save() {
-        (UIApplication.shared.delegate as! AppDelegate).saveContext()
-        
-    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
